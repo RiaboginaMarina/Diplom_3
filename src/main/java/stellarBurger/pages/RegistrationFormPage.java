@@ -9,9 +9,9 @@ import java.time.Duration;
 
 public class RegistrationFormPage {
     private WebDriver driver;
-    private By nameField = By.xpath(".//label[text()='Имя']");
-    private By emailField = By.xpath(".//label[text()='Email']");
-    private By passwordField = By.xpath(".//label[text()='Пароль']");
+    private By nameField = By.xpath(".//fieldset[1]//input");
+    private By emailField = By.xpath(".//fieldset[2]//input");
+    private By passwordField = By.xpath(".//fieldset[3]//input");
     private By signUpButton = By.xpath(".//button[text()='Зарегистрироваться']");
     private By loginLink = By.xpath(".//a[@href='/login']");
 
@@ -32,4 +32,5 @@ public class RegistrationFormPage {
         setEmail(email);
         setPassword(password);
     }
+
 }
