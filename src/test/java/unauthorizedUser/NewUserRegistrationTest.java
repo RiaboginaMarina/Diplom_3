@@ -20,7 +20,7 @@ import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class NewUserRegistration {
+public class NewUserRegistrationTest {
     private final UserClient client = new UserClient();
     @Rule
     public DriverRule driverRule = new DriverRule();
