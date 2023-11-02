@@ -1,8 +1,15 @@
 package unauthorizedUser;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.html5.LocalStorage;
+import org.openqa.selenium.html5.WebStorage;
+import stellarBurger.api.User;
+import stellarBurger.api.UserClient;
 import stellarBurger.pages.LoginPage;
 import stellarBurger.pages.MainPageBurgers;
 import stellarBurger.pages.RegistrationFormPage;
@@ -12,12 +19,25 @@ import static org.junit.Assert.assertEquals;
 
 
 public class LoginToAccountTest {
-    private final String email = "pochta1234@yandex.ru";
-    private final String password = "passwordword123";
+    private final UserClient client = new UserClient();
+    private final String email = RandomStringUtils.randomAlphanumeric(10) + "@yandex.ru";
+    private final String password = RandomStringUtils.randomAlphanumeric(10);
+    private final String name = RandomStringUtils.randomAlphabetic(10);
     private final String expectedChangedTextOnLoginButton = "Оформить заказ";
+    private final User user = new User(email, password, name);
     @Rule
     public DriverRule driverRule = new DriverRule();
-
+    @Before
+    public void createUser() {
+        client.createNewUser(user);
+    }
+    @After
+    public void deleteUser(){
+        WebDriver driver = driverRule.getDriver();
+        LocalStorage localStorage = ((WebStorage) driver).getLocalStorage();
+        String accessToken = localStorage.getItem("accessToken");
+        client.delete(accessToken);
+    }
     @Test
     public void loginToAccountUsingLogInButtonOnMainPage() {
         WebDriver driver = driverRule.getDriver();
