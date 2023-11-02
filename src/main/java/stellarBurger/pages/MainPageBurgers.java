@@ -11,9 +11,9 @@ public class MainPageBurgers {
     private WebDriver driver;
     private By accountButton = By.xpath(".//a[@href='/account']");
     private By logInButton = By.cssSelector(".button_button__33qZ0");
-    private By bunsMenu = By.xpath(".//span[text()='Булки']");
-    private By sauceMenu = By.xpath(".//span[text()='Соусы']");
-    private By fillingsMenu = By.xpath(".//span[text()='Начинки']");
+    private By bunsMenu = By.cssSelector(".tab_tab__1SPyG:nth-child(1)");
+    private By sauceMenu = By.cssSelector(".tab_tab__1SPyG:nth-child(2)");
+    private By fillingsMenu = By.cssSelector(".tab_tab__1SPyG:nth-child(3)");
 
 
     public MainPageBurgers(WebDriver driver) {
@@ -30,4 +30,16 @@ public class MainPageBurgers {
     }
     public String getTextFromLoginButton(){return driver.findElement(logInButton).getText();}
     public boolean checkMainPageLoaded(){return driver.findElement(bunsMenu).isDisplayed();}
+    public boolean checkSwitchToSauceMenu(){
+        return new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.attributeContains(sauceMenu, "class", "current"));
+    }
+    public boolean checkSwitchToFillingsMenu(){
+        return new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.attributeContains(fillingsMenu, "class", "current"));
+    }
+    public boolean checkSwitchToBunsMenu(){
+        return new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.attributeContains(bunsMenu, "class", "current"));
+    }
 }
