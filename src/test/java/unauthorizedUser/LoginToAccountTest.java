@@ -27,17 +27,20 @@ public class LoginToAccountTest {
     private final User user = new User(email, password, name);
     @Rule
     public DriverRule driverRule = new DriverRule();
+
     @Before
     public void createUser() {
         client.createNewUser(user);
     }
+
     @After
-    public void deleteUser(){
+    public void deleteUser() {
         WebDriver driver = driverRule.getDriver();
         LocalStorage localStorage = ((WebStorage) driver).getLocalStorage();
         String accessToken = localStorage.getItem("accessToken");
         client.delete(accessToken);
     }
+
     @Test
     public void loginToAccountUsingLogInButtonOnMainPage() {
         WebDriver driver = driverRule.getDriver();

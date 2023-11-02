@@ -10,6 +10,7 @@ import java.time.Duration;
 
 public class DriverRule extends ExternalResource {
     WebDriver driver;
+
     @Override
     protected void before() throws Throwable {
         System.setProperty("webdriver.http.factory", "jdk-http-client");
@@ -19,10 +20,12 @@ public class DriverRule extends ExternalResource {
         driver = new ChromeDriver(service);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     }
+
     @Override
     protected void after() {
         driver.quit();
     }
+
     public WebDriver getDriver() {
         return driver;
     }
