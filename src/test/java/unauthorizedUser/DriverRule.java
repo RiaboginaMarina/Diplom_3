@@ -1,5 +1,6 @@
 package unauthorizedUser;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.rules.ExternalResource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -24,14 +25,9 @@ public class DriverRule extends ExternalResource {
     }
 
     private void setUpChrome() {
-        ChromeDriverService service = new ChromeDriverService.Builder()
-                .usingDriverExecutable(new File(EnvConfig.CHROME_DRIVER))
-                .build();
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
 
-        ChromeOptions options = new ChromeOptions()
-                .setBinary(EnvConfig.CHROME_BINARY);
-
-        driver = new ChromeDriver(service, options);
     }
 
     public void setUpYandex() {
