@@ -25,8 +25,9 @@ public class MyAccountPage {
         driver.findElement(stellarBurgersLogo).click();
     }
 
-    public void clickExitButton() {
+    public LoginPage clickExitButton() {
         driver.findElement(exitButton).click();
+        return new LoginPage(driver);
     }
 
     public void waitForLoadMyAccountPage() {

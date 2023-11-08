@@ -5,7 +5,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.html5.LocalStorage;
 import org.openqa.selenium.html5.WebStorage;
 import stellarBurger.api.User;
@@ -27,79 +26,79 @@ public class LoginToAccountTest {
     private final User user = new User(email, password, name);
     @Rule
     public DriverRule driverRule = new DriverRule();
+    private MainPageBurgers mainPage;
 
     @Before
-    public void createUser() {
+    public void setUp() {
         client.createNewUser(user);
+        mainPage = new MainPageBurgers(driverRule.getDriver());
+        mainPage.open();
     }
 
     @After
     public void deleteUser() {
-        WebDriver driver = driverRule.getDriver();
-        LocalStorage localStorage = ((WebStorage) driver).getLocalStorage();
+        LocalStorage localStorage = ((WebStorage) driverRule.getDriver()).getLocalStorage();
         String accessToken = localStorage.getItem("accessToken");
         client.delete(accessToken);
     }
 
     @Test
     public void loginToAccountUsingLogInButtonOnMainPage() {
-        WebDriver driver = driverRule.getDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        MainPageBurgers objMainPage = new MainPageBurgers(driver);
-        objMainPage.clickLogInButton();
-        LoginPage objLoginPage = new LoginPage(driver);
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.fillLoginForm(email, password);
-        objLoginPage.clickLogInButton();
-        objMainPage.waitForLoadMainPage();
-        String actualTextOnLoginButtonWhenLoggedIn = objMainPage.getTextFromLoginButton();
+        LoginPage loginPage = mainPage.clickLogInButton();
+        loginPage.waitForLoadLoginPage()
+                .fillLoginForm(email, password)
+                .clickLogInButton();
+
+        mainPage.waitForLoadMainPage();
+        String actualTextOnLoginButtonWhenLoggedIn = mainPage.getTextFromLoginButton();
         assertEquals(expectedChangedTextOnLoginButton, actualTextOnLoginButtonWhenLoggedIn);
     }
 
     @Test
     public void loginToAccountUsingAccountButtonOnMainPage() {
-        WebDriver driver = driverRule.getDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        MainPageBurgers objMainPage = new MainPageBurgers(driver);
-        objMainPage.clickAccountButton();
-        LoginPage objLoginPage = new LoginPage(driver);
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.fillLoginForm(email, password);
-        objLoginPage.clickLogInButton();
-        objMainPage.waitForLoadMainPage();
-        String actualTextOnLoginButtonWhenLoggedIn = objMainPage.getTextFromLoginButton();
+        LoginPage loginPage = mainPage.clickAccountButtonWithoutLoggedUser();
+        loginPage.waitForLoadLoginPage()
+                .fillLoginForm(email, password)
+                .clickLogInButton();
+
+        mainPage.waitForLoadMainPage();
+        String actualTextOnLoginButtonWhenLoggedIn = mainPage.getTextFromLoginButton();
         assertEquals(expectedChangedTextOnLoginButton, actualTextOnLoginButtonWhenLoggedIn);
     }
 
     @Test
     public void loginToAccountUsingLoginLinkInRegistrationForm() {
-        WebDriver driver = driverRule.getDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/register");
-        RegistrationFormPage objRegisterPage = new RegistrationFormPage(driver);
-        objRegisterPage.clickLoginLink();
-        LoginPage objLoginPage = new LoginPage(driver);
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.fillLoginForm(email, password);
-        objLoginPage.clickLogInButton();
-        MainPageBurgers objMainPage = new MainPageBurgers(driver);
-        objMainPage.waitForLoadMainPage();
-        String actualTextOnLoginButtonWhenLoggedIn = objMainPage.getTextFromLoginButton();
+        LoginPage loginPage = mainPage.clickLogInButton();
+        loginPage.waitForLoadLoginPage();
+
+        RegistrationFormPage registerPage = loginPage.clickSignUpLink();
+        registerPage.waitForLoadRegistrationForm()
+                .clickLoginLink();
+
+        loginPage.waitForLoadLoginPage()
+                .fillLoginForm(email, password)
+                .clickLogInButton();
+
+        mainPage.waitForLoadMainPage();
+        String actualTextOnLoginButtonWhenLoggedIn = mainPage.getTextFromLoginButton();
         assertEquals(expectedChangedTextOnLoginButton, actualTextOnLoginButtonWhenLoggedIn);
     }
 
     @Test
     public void loginToAccountUsingLoginLinkOnRestorePasswordPage() {
-        WebDriver driver = driverRule.getDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/forgot-password");
-        RestorePasswordPage objPasswordPage = new RestorePasswordPage(driver);
-        objPasswordPage.clickLoginLink();
-        LoginPage objLoginPage = new LoginPage(driver);
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.fillLoginForm(email, password);
-        objLoginPage.clickLogInButton();
-        MainPageBurgers objMainPage = new MainPageBurgers(driver);
-        objMainPage.waitForLoadMainPage();
-        String actualTextOnLoginButtonWhenLoggedIn = objMainPage.getTextFromLoginButton();
+        LoginPage loginPage = mainPage.clickLogInButton();
+        loginPage.waitForLoadLoginPage();
+
+        RestorePasswordPage passwordPage = loginPage.clickResetPasswordLink();
+        passwordPage.waitForLoadRestorePasswordPage()
+                .clickLoginLink();
+
+        loginPage.waitForLoadLoginPage()
+                .fillLoginForm(email, password)
+                .clickLogInButton();
+
+        mainPage.waitForLoadMainPage();
+        String actualTextOnLoginButtonWhenLoggedIn = mainPage.getTextFromLoginButton();
         assertEquals(expectedChangedTextOnLoginButton, actualTextOnLoginButtonWhenLoggedIn);
     }
 }

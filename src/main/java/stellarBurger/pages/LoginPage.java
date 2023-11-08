@@ -4,10 +4,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import stellarBurger.EnvConfig;
 
 import java.time.Duration;
 
 public class LoginPage {
+    public static final String LOGIN_URL = EnvConfig.BASE_URL + "login";
     private final WebDriver driver;
     private final By emailField = By.xpath(".//input[@name='name']");
     private final By passwordField = By.xpath(".//input[@name='Пароль']");
@@ -20,6 +22,11 @@ public class LoginPage {
         this.driver = driver;
     }
 
+    public LoginPage open() {
+        driver.get(LOGIN_URL);
+        return this;
+    }
+
     public void setEmail(String email) {
         driver.findElement(emailField).sendKeys(email);
     }
@@ -28,29 +35,34 @@ public class LoginPage {
         driver.findElement(passwordField).sendKeys(password);
     }
 
-    public void clickLogInButton() {
+    public MainPageBurgers clickLogInButton() {
         driver.findElement(logInButton).click();
+        return new MainPageBurgers(driver);
     }
 
-    public void clickSignUpLink() {
+    public RegistrationFormPage clickSignUpLink() {
         driver.findElement(signUpLink).click();
+        return new RegistrationFormPage(driver);
     }
 
-    public void clickResetPasswordLink() {
+    public RestorePasswordPage clickResetPasswordLink() {
         driver.findElement(resetPasswordLink).click();
+        return new RestorePasswordPage(driver);
     }
 
     public void clickStellarLogo() {
         driver.findElement(stellarBurgersLogo).click();
     }
 
-    public void waitForLoadLoginPage() {
+    public LoginPage waitForLoadLoginPage() {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//h2[text()='Вход']")));
+        return this;
     }
 
-    public void fillLoginForm(String email, String password) {
+    public LoginPage fillLoginForm(String email, String password) {
         setEmail(email);
         setPassword(password);
+        return this;
     }
 }

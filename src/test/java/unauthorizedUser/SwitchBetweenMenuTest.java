@@ -1,8 +1,8 @@
 package unauthorizedUser;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import stellarBurger.pages.MainPageBurgers;
 
 import static org.junit.Assert.assertTrue;
@@ -10,32 +10,31 @@ import static org.junit.Assert.assertTrue;
 public class SwitchBetweenMenuTest {
     @Rule
     public DriverRule driverRule = new DriverRule();
+    MainPageBurgers mainPage;
+
+    @Before
+    public void setUp() {
+        mainPage = new MainPageBurgers(driverRule.getDriver());
+        mainPage.open()
+                .waitForLoadMainPage();
+    }
 
     @Test
     public void switchToSauceMenu() {
-        WebDriver driver = driverRule.getDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        MainPageBurgers objMainPAge = new MainPageBurgers(driver);
-        objMainPAge.selectSauceMenu();
-        assertTrue(objMainPAge.checkSwitchToSauceMenu());
+        mainPage.selectSauceMenu();
+        assertTrue(mainPage.checkSwitchToSauceMenu());
     }
 
     @Test
     public void switchToFillingsMenu() {
-        WebDriver driver = driverRule.getDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        MainPageBurgers objMainPAge = new MainPageBurgers(driver);
-        objMainPAge.selectFillingsMenu();
-        assertTrue(objMainPAge.checkSwitchToFillingsMenu());
+        mainPage.selectFillingsMenu();
+        assertTrue(mainPage.checkSwitchToFillingsMenu());
     }
 
     @Test
     public void switchToBunsMenu() {
-        WebDriver driver = driverRule.getDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        MainPageBurgers objMainPAge = new MainPageBurgers(driver);
-        objMainPAge.selectSauceMenu();
-        objMainPAge.selectBunsMenu();
-        assertTrue(objMainPAge.checkSwitchToBunsMenu());
+        mainPage.selectSauceMenu();
+        mainPage.selectBunsMenu();
+        assertTrue(mainPage.checkSwitchToBunsMenu());
     }
 }

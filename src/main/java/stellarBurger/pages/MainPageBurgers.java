@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import stellarBurger.EnvConfig;
 
 import java.time.Duration;
 
@@ -20,12 +21,24 @@ public class MainPageBurgers {
         this.driver = driver;
     }
 
-    public void clickAccountButton() {
-        driver.findElement(accountButton).click();
+    public MainPageBurgers open() {
+        driver.get(EnvConfig.BASE_URL);
+        return this;
     }
 
-    public void clickLogInButton() {
+    public MyAccountPage clickAccountButtonWithLoggedUser() {
+        driver.findElement(accountButton).click();
+        return new MyAccountPage(driver);
+    }
+
+    public LoginPage clickAccountButtonWithoutLoggedUser() {
+        driver.findElement(accountButton).click();
+        return new LoginPage(driver);
+    }
+
+    public LoginPage clickLogInButton() {
         driver.findElement(logInButton).click();
+        return new LoginPage(driver);
     }
 
     public void selectBunsMenu() {
